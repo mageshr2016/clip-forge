@@ -2,10 +2,9 @@ import { app, shell, BrowserWindow, ipcMain, dialog, protocol } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import { exportVideo, getVideoMetadata, getDefaultOutputPath } from './ffmpeg/export'
+import { exportVideo, getVideoMetadata } from './ffmpeg/export'
 import { detectScenes } from './ffmpeg/sceneDetection'
 import { extractAudioForSTT, hasAudio } from './ffmpeg/audioExtraction'
-import { readFile } from 'fs/promises'
 
 // Declare mainWindow at module level so it's accessible to IPC handlers
 let mainWindow: BrowserWindow | null = null
@@ -31,7 +30,7 @@ function createWindow(): void {
   })
 
   mainWindow.on('ready-to-show', () => {
-    mainWindow.show()
+    mainWindow?.show()
   })
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
@@ -77,57 +76,57 @@ app.whenReady().then(() => {
   ipcMain.on('ping', () => console.log('pong'))
   
   // Video export handlers
-  ipcMain.handle('export-video', async (event, options) => {
+  ipcMain.handle('export-video', async (_, options) => {
     try {
       const result = await exportVideo(options)
       return { success: true, outputPath: result }
     } catch (error) {
       console.error('Export error:', error)
-      return { success: false, error: error.message }
+      return { success: false, error: error instanceof Error ? error.message : 'Export failed' }
     }
   })
 
   // Video metadata handler
-  ipcMain.handle('get-video-metadata', async (event, inputPath) => {
+  ipcMain.handle('get-video-metadata', async (_, inputPath) => {
     try {
       const metadata = await getVideoMetadata(inputPath)
       return { success: true, metadata }
     } catch (error) {
       console.error('Metadata error:', error)
-      return { success: false, error: error.message }
+      return { success: false, error: error instanceof Error ? error.message : 'Metadata extraction failed' }
     }
   })
 
   // Scene detection handler
-  ipcMain.handle('detect-scenes', async (event, inputPath, threshold = 0.4) => {
+  ipcMain.handle('detect-scenes', async (_, inputPath, threshold = 0.4) => {
     try {
       const scenes = await detectScenes(inputPath, threshold)
       return { success: true, scenes }
     } catch (error) {
       console.error('Scene detection error:', error)
-      return { success: false, error: error.message }
+      return { success: false, error: error instanceof Error ? error.message : 'Scene detection failed' }
     }
   })
 
   // Audio extraction handler
-  ipcMain.handle('extract-audio', async (event, inputPath, outputPath) => {
+  ipcMain.handle('extract-audio', async (_, inputPath, outputPath) => {
     try {
       const result = await extractAudioForSTT(inputPath, outputPath)
       return { success: true, outputPath: result }
     } catch (error) {
       console.error('Audio extraction error:', error)
-      return { success: false, error: error.message }
+      return { success: false, error: error instanceof Error ? error.message : 'Audio extraction failed' }
     }
   })
 
   // Check if video has audio
-  ipcMain.handle('has-audio', async (event, inputPath) => {
+  ipcMain.handle('has-audio', async (_, inputPath) => {
     try {
       const hasAudioTrack = await hasAudio(inputPath)
       return { success: true, hasAudio: hasAudioTrack }
     } catch (error) {
       console.error('Audio check error:', error)
-      return { success: false, error: error.message }
+      return { success: false, error: error instanceof Error ? error.message : 'Audio check failed' }
     }
   })
 
@@ -150,7 +149,7 @@ app.whenReady().then(() => {
       }
     } catch (error) {
       console.error('File selection error:', error)
-      return { success: false, error: error.message }
+      return { success: false, error: error instanceof Error ? error.message : 'File selection failed' }
     }
   })
 
@@ -164,45 +163,37 @@ app.whenReady().then(() => {
       return { success: true, outputPath: result }
     } catch (error) {
       console.error('Export with progress error:', error)
-      return { success: false, error: error.message }
+      return { success: false, error: error instanceof Error ? error.message : 'Export with progress failed' }
     }
   })
 
   // Open file location handler
-  ipcMain.handle('open-file-location', async (event, filePath) => {
+  ipcMain.handle('open-file-location', async (_, filePath) => {
     try {
       const { shell } = require('electron')
-      const path = require('path')
-      const dir = path.dirname(filePath)
       await shell.showItemInFolder(filePath)
       return { success: true }
     } catch (error) {
       console.error('Open file location error:', error)
-      return { success: false, error: error.message }
+      return { success: false, error: error instanceof Error ? error.message : 'Open file location failed' }
     }
   })
 
   // Show save dialog handler
-  ipcMain.handle('show-save-dialog', async (event, options) => {
+  ipcMain.handle('show-save-dialog', async (_, options) => {
     try {
-      console.log('Save dialog requested with options:', options)
-      console.log('mainWindow available:', !!mainWindow)
-      
       // Try with mainWindow first, then fallback to no window
       let result
-      if (mainWindow) {
-        console.log('Showing save dialog on mainWindow:', mainWindow.id)
+      if (mainWindow && !mainWindow.isDestroyed()) {
         result = await dialog.showSaveDialog(mainWindow, options)
       } else {
-        console.log('Showing save dialog without parent window')
         result = await dialog.showSaveDialog(options)
       }
       
-      console.log('Save dialog result:', result)
       return result
     } catch (error) {
       console.error('Save dialog error:', error)
-      return { canceled: true, error: error.message }
+      return { canceled: true, error: error instanceof Error ? error.message : 'Save dialog failed' }
     }
   })
 

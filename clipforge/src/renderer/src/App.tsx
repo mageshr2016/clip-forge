@@ -3,70 +3,30 @@ import ExportButton from './components/ExportButton'
 import FileImport from './components/FileImport'
 import VideoPlayer from './components/VideoPlayer'
 import Timeline from './components/Timeline'
-import TrimControls from './components/TrimControls'
 import useVideoStore from './stores/videoStore'
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts'
 import { formatTime } from './utils/timeUtils'
 
 function App(): React.JSX.Element {
-  const { clips, selectedClipId, getSelectedClip, addToTimeline, timelineClips, isPlaying, currentTime, duration } = useVideoStore()
+  const { clips, selectedClipId, getSelectedClip, addToTimeline, timelineClips, isPlaying, currentTime } = useVideoStore()
   const selectedClip = getSelectedClip()
 
   // Enable keyboard shortcuts
   useKeyboardShortcuts()
 
-  // Debug: Check what APIs are available
-  console.log('Window object:', window)
-  console.log('window.electron:', window.electron)
-  console.log('window.clipForgeAPI:', window.clipForgeAPI)
 
-  const ipcHandle = (): void => {
-    if (window.electron?.ipcRenderer) {
-      window.electron.ipcRenderer.send('ping')
-    } else {
-      console.error('window.electron.ipcRenderer is not available')
-    }
-  }
-  
-  const testClipForgeAPI = async (): Promise<void> => {
-    console.log('Testing ClipForge API...')
-    
-    try {
-      // Test file selection
-      const fileResult = await window.clipForgeAPI.selectVideoFile()
-      if (fileResult.success) {
-        console.log('Selected file:', fileResult.filePath)
-        
-        // Test metadata
-        const metadataResult = await window.clipForgeAPI.getVideoMetadata(fileResult.filePath)
-        if (metadataResult.success) {
-          console.log('Video metadata:', metadataResult.metadata)
-        }
-        
-        // Test scene detection
-        const sceneResult = await window.clipForgeAPI.detectScenes(fileResult.filePath)
-        if (sceneResult.success) {
-          console.log('Detected scenes:', sceneResult.scenes)
-        }
-      }
-    } catch (error) {
-      console.error('API test failed:', error)
-    }
-  }
 
   const handleImportComplete = (clipId: string): void => {
-    console.log('Video imported successfully:', clipId)
     // Automatically add to timeline
     addToTimeline(clipId)
-    console.log('🎬 App: Auto-added clip to timeline:', clipId)
   }
 
   const handleImportError = (error: string): void => {
     console.error('Import failed:', error)
   }
 
-  const handleExportComplete = (outputPath: string): void => {
-    console.log('Export completed:', outputPath)
+  const handleExportComplete = (): void => {
+    // Export completed successfully
   }
 
   const handleExportError = (error: string): void => {
@@ -255,7 +215,7 @@ function App(): React.JSX.Element {
                         <span>⏭</span>
                       </button>
                       <div className="time-display">
-                        <span>{formatTime(currentTime)} / {isFinite(duration) && duration > 0 ? formatTime(duration) : 'NaN:NaN'}</span>
+                        <span>{formatTime(currentTime)} / {selectedClip?.duration && isFinite(selectedClip.duration) && selectedClip.duration > 0 ? formatTime(selectedClip.duration) : 'NaN:NaN'}</span>
                       </div>
                     </div>
           </div>

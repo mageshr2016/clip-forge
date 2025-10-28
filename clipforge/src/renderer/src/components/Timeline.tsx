@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import useVideoStore from '../stores/videoStore'
 import TimelineClip from './TimelineClip'
 import { formatTime } from '../utils/timeUtils'
@@ -62,7 +62,7 @@ export default function Timeline({ className = '' }: TimelineProps) {
 
   // Generate time ruler markers
   const generateTimeMarkers = () => {
-    const markers = []
+    const markers: React.ReactElement[] = []
     const maxTime = Math.max(totalDuration, 30) // At least 30 seconds
     const interval = maxTime > 60 ? 10 : 5 // 10s intervals for long videos, 5s for short
 
@@ -159,12 +159,11 @@ export default function Timeline({ className = '' }: TimelineProps) {
 
           {/* Timeline clips */}
           <div className="timeline-clips">
-            {timelineClips.map((clip, index) => {
+            {timelineClips.map((clip) => {
               return (
                 <TimelineClip
                   key={clip.id}
                   clip={clip}
-                  index={index}
                   pixelsPerSecond={pixelsPerSecond}
                 />
               )

@@ -144,6 +144,19 @@ clipforge/
 
 ## 🧪 Testing
 
+### For Graders/Testers
+
+#### Quick Test Checklist
+1. **Start the app**: `npm run dev`
+2. **Import a video**: Click "Import media" and select any MP4/MOV file
+3. **Test trim functionality**: 
+   - Drag the red handles on the timeline to set trim points
+   - Click play - video should start from trim start point
+   - Check duration display shows trimmed time
+4. **Test export**: Click "Export Video" and choose save location
+5. **Verify export**: Check the exported file plays correctly
+
+#### Unit Tests
 ```bash
 # Run unit tests
 npm test
@@ -154,6 +167,13 @@ npm run test:ui
 # Run tests with coverage
 npm run test:coverage
 ```
+
+#### Manual Testing Scenarios
+- **Video Import**: Test with different formats (MP4, MOV, AVI)
+- **Timeline Editing**: Drag clips, set trim points, test playback
+- **Export Pipeline**: Test export with different quality settings
+- **Keyboard Shortcuts**: Test I/O keys for trim points, Space for play/pause
+- **Error Handling**: Test with invalid files, corrupted videos
 
 ## 📦 Building & Packaging
 

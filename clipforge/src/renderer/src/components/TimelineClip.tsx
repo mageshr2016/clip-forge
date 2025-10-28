@@ -10,8 +10,6 @@ interface TimelineClipProps {
     duration: number
     width: number
     height: number
-    frameRate: number
-    fileSize: number
     trimStart?: number
     trimEnd?: number
   }
@@ -101,7 +99,7 @@ const TimelineClip: React.FC<TimelineClipProps> = ({ clip, pixelsPerSecond }) =>
   }, [clip.path, duration, isGenerating, thumbnails.length])
 
   // Handle trim dragging with proper bounds
-  const handleMouseMove = useCallback((e: MouseEvent) => {
+  const handleMouseMove = useCallback((e: MouseEvent): void => {
     if (!isDraggingLeft && !isDraggingRight) return
     
     const clipElement = document.querySelector(`[data-clip-id="${clip.id}"]`) as HTMLElement
@@ -135,6 +133,7 @@ const TimelineClip: React.FC<TimelineClipProps> = ({ clip, pixelsPerSecond }) =>
         document.removeEventListener('mouseup', handleMouseUp)
       }
     }
+    return undefined
   }, [isDraggingLeft, isDraggingRight, handleMouseMove, handleMouseUp])
 
   return (

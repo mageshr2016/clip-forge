@@ -1,8 +1,6 @@
 import ffmpeg from 'fluent-ffmpeg'
 import ffmpegPath from 'ffmpeg-static'
 import ffprobeStatic from 'ffprobe-static'
-import { join } from 'path'
-import { app } from 'electron'
 
 // Extract the actual path from ffprobe-static (it exports an object with path property)
 const ffprobePath = ffprobeStatic.path
@@ -122,7 +120,7 @@ export async function getVideoMetadata(inputPath: string): Promise<any> {
       })
     } catch (error) {
       console.error('FFprobe setup error:', error)
-      reject(new Error(`FFprobe not available: ${error.message}`))
+      reject(new Error(`FFprobe not available: ${error instanceof Error ? error.message : 'Unknown error'}`))
     }
   })
 }

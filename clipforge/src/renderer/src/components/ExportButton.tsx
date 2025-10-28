@@ -1,13 +1,12 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useExport, ExportOptions } from '../hooks/useExport'
 
 interface ExportButtonProps {
   inputPath: string
-  outputPath?: string
   startTime?: number
   duration?: number
   quality?: 'low' | 'medium' | 'high'
-  onExportComplete?: (outputPath: string) => void
+  onExportComplete?: () => void
   onExportError?: (error: string) => void
   className?: string
   disabled?: boolean
@@ -15,7 +14,6 @@ interface ExportButtonProps {
 
 export default function ExportButton({
   inputPath,
-  outputPath,
   startTime,
   duration,
   quality = 'high',
@@ -28,12 +26,7 @@ export default function ExportButton({
   const [showProgress, setShowProgress] = useState(false)
 
   const handleExport = async () => {
-    console.log('Export button clicked!')
-    console.log('Input path:', inputPath)
-    console.log('Selected clip available:', !!inputPath)
-    
     if (!inputPath) {
-      console.error('No input file selected')
       onExportError?.('No input file selected')
       return
     }
@@ -41,7 +34,6 @@ export default function ExportButton({
     // Show file picker to let user choose save location
     try {
       const defaultPath = getDefaultOutputPath(inputPath)
-      console.log('Default save path:', defaultPath)
       
       const dialogOptions = {
         title: 'Save Video As',
@@ -52,19 +44,13 @@ export default function ExportButton({
         ]
       }
       
-      console.log('Calling showSaveDialog with options:', dialogOptions)
-      console.log('clipForgeAPI.showSaveDialog available:', !!window.clipForgeAPI.showSaveDialog)
-      
       const saveResult = await window.clipForgeAPI.showSaveDialog(dialogOptions)
-      console.log('Save dialog result:', saveResult)
 
       if (saveResult.canceled) {
-        console.log('Export cancelled by user')
         return
       }
 
       const selectedPath = saveResult.filePath
-      console.log('User selected save path:', selectedPath)
 
       clearError()
       setShowProgress(true)
@@ -77,15 +63,10 @@ export default function ExportButton({
         quality
       }
 
-      console.log('Starting export with options:', options)
-      console.log('clipForgeAPI available:', !!window.clipForgeAPI)
-
       const result = await exportVideoWithProgress(options)
-      console.log('Export result:', result)
       
       if (result.success && result.outputPath) {
-        console.log('Export completed successfully:', result.outputPath)
-        onExportComplete?.(result.outputPath)
+        onExportComplete?.()
         setShowProgress(false)
         
         // Use browser alert for immediate visibility
@@ -95,15 +76,13 @@ export default function ExportButton({
         try {
           await window.clipForgeAPI.openFileLocation?.(result.outputPath)
         } catch (error) {
-          console.log('Could not open folder:', error)
+          // Could not open folder
         }
       } else {
-        console.error('Export failed:', result.error)
         onExportError?.(result.error || 'Export failed')
         setShowProgress(false)
       }
     } catch (error) {
-      console.error('Export error:', error)
       onExportError?.(error instanceof Error ? error.message : 'Export failed')
       setShowProgress(false)
     }

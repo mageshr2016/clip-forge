@@ -1,8 +1,6 @@
 import ffmpeg from 'fluent-ffmpeg'
 import ffmpegPath from 'ffmpeg-static'
 import ffprobeStatic from 'ffprobe-static'
-import { join } from 'path'
-import { app } from 'electron'
 
 // Extract the actual path from ffprobe-static (it exports an object with path property)
 const ffprobePath = ffprobeStatic.path

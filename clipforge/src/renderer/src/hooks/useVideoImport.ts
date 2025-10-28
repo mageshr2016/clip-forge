@@ -1,7 +1,6 @@
 import { useState, useCallback } from 'react'
 import useVideoStore from '../stores/videoStore'
-import { validateVideoFile, getFileNameWithoutExtension, formatFileSize } from '../utils/fileUtils'
-import { VideoMetadata } from '../utils/fileUtils'
+import { validateVideoFile, getFileNameWithoutExtension } from '../utils/fileUtils'
 
 // Safe frame rate parsing without eval()
 function parseFrameRate(frameRate: string): number {
@@ -49,11 +48,21 @@ export function useVideoImport() {
       setIsAnalyzing(true)
       setAnalysisProgress(10)
       
-      // Ensure file path is a string
-      const filePath = String(file.path)
-      console.log('Getting metadata for file:', filePath, 'Type:', typeof filePath)
+      // For file picker, we need to use the file name as a fallback
+      // The actual path will be handled by the main process
+      const fileName = file.name
+      console.log('Getting metadata for file:', fileName, 'Type:', typeof fileName)
       
-      const metadataResult = await window.clipForgeAPI.getVideoMetadata(filePath)
+      // Use selectVideoFile API for file picker imports
+      const fileResult = await window.clipForgeAPI.selectVideoFile()
+      if (!fileResult.success) {
+        setError(fileResult.error || 'No file selected')
+        setIsAnalyzing(false)
+        setIsImporting(false)
+        return { success: false, error: fileResult.error }
+      }
+      
+      const metadataResult = await window.clipForgeAPI.getVideoMetadata(fileResult.filePath)
       if (!metadataResult.success) {
         setError(metadataResult.error || 'Failed to get video metadata')
         setIsAnalyzing(false)
@@ -64,7 +73,7 @@ export function useVideoImport() {
       setAnalysisProgress(30)
 
       // Check if video has audio
-      const audioResult = await window.clipForgeAPI.hasAudio(filePath)
+      const audioResult = await window.clipForgeAPI.hasAudio(fileResult.filePath)
       if (!audioResult.success) {
         console.warn('Failed to check audio:', audioResult.error)
       }
@@ -77,8 +86,8 @@ export function useVideoImport() {
       const audioStream = metadata.streams.find((stream: any) => stream.codec_type === 'audio')
 
       const clipData = {
-        name: getFileNameWithoutExtension(file.name),
-        path: filePath,
+        name: getFileNameWithoutExtension(fileResult.filePath),
+        path: fileResult.filePath,
         duration: metadata.format.duration || 0,
         width: videoStream?.width || 0,
         height: videoStream?.height || 0,

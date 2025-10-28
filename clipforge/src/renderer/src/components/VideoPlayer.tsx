@@ -17,11 +17,8 @@ export default function VideoPlayer({ className = '' }: VideoPlayerProps) {
     selectedClipId, 
     clips, 
     timelineClips,
-    currentTime: storeCurrentTime,
     isPlaying,
-    duration: storeDuration,
     setCurrentTime: setStoreCurrentTime,
-    setDuration: setStoreDuration,
     setIsPlaying: setStoreIsPlaying
   } = useVideoStore()
 
@@ -55,28 +52,18 @@ export default function VideoPlayer({ className = '' }: VideoPlayerProps) {
       const trimStart = currentClip.trimStart || 0
       const trimEnd = currentClip.trimEnd || fullDuration
       
-      console.log('🎬 VideoPlayer: Metadata loaded', {
-        fullDuration,
-        trimStart,
-        trimEnd,
-        trimmedDuration: trimEnd - trimStart
-      })
       
       if (isFinite(fullDuration) && fullDuration > 0) {
         // Set the trimmed duration for display
         const trimmedDuration = trimEnd - trimStart
-        console.log('🎬 VideoPlayer: Setting duration to', trimmedDuration)
         setDuration(trimmedDuration)
-        setStoreDuration(trimmedDuration) // Update store duration
         setIsLoaded(true)
         
         // Set the video to start at trim point
         videoRef.current.currentTime = trimStart
         setCurrentTime(0) // Reset current time to 0 for trimmed view
       } else {
-        console.log('🎬 VideoPlayer: Invalid duration, setting to 0')
         setDuration(0)
-        setStoreDuration(0) // Update store duration
         setIsLoaded(false)
       }
     }
@@ -84,17 +71,16 @@ export default function VideoPlayer({ className = '' }: VideoPlayerProps) {
 
   // Handle video load start
   const handleLoadStart = () => {
-    console.log('🎬 VideoPlayer: Video load started')
+    // Video load started
   }
 
   // Handle video can play
   const handleCanPlay = () => {
-    console.log('🎬 VideoPlayer: Video can play')
+    // Video can play
   }
 
   // Handle video loaded data
   const handleLoadedData = () => {
-    console.log('🎬 VideoPlayer: Video data loaded')
     setIsLoaded(true)
   }
 
@@ -153,7 +139,6 @@ export default function VideoPlayer({ className = '' }: VideoPlayerProps) {
       if (videoRef.current.paused) {
         // Ensure we start at the trim point
         const trimStart = currentClip.trimStart || 0
-        console.log('🎬 VideoPlayer: Playing from trim start', trimStart)
         videoRef.current.currentTime = trimStart
         videoRef.current.play()
         setStoreIsPlaying(true)
@@ -230,17 +215,14 @@ export default function VideoPlayer({ className = '' }: VideoPlayerProps) {
           onLoadedMetadata={handleLoadedMetadata}
           onTimeUpdate={handleTimeUpdate}
           onPlay={() => {
-            console.log('🎬 VideoPlayer: Native play event')
             // Ensure we start at trim point when using native controls
             if (videoRef.current && currentClip) {
               const trimStart = currentClip.trimStart || 0
-              console.log('🎬 VideoPlayer: Setting currentTime to trim start', trimStart)
               videoRef.current.currentTime = trimStart
             }
             setStoreIsPlaying(true)
           }}
           onPause={() => {
-            console.log('🎬 VideoPlayer: Native pause event')
             setStoreIsPlaying(false)
           }}
           onEnded={() => setStoreIsPlaying(false)}
