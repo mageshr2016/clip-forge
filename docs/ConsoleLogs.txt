@@ -1,0 +1,16 @@
+Export button clicked!
+ExportButton.tsx:33 Input path: C:\Users\mages\Videos\Testing\MessageAI_Intro.mp4
+ExportButton.tsx:34 Selected clip available: true
+ExportButton.tsx:54 Export cancelled by user
+ExportButton.tsx:32 Export button clicked!
+ExportButton.tsx:33 Input path: C:\Users\mages\Videos\Testing\MessageAI_Intro.mp4
+ExportButton.tsx:34 Selected clip available: true
+ExportButton.tsx:54 Export cancelled by user
+ExportButton.tsx:32 Export button clicked!
+ExportButton.tsx:33 Input path: C:\Users\mages\Videos\Testing\MessageAI_Intro.mp4
+ExportButton.tsx:34 Selected clip available: true
+ExportButton.tsx:54 Export cancelled by user
+ExportButton.tsx:32 Export button clicked!
+ExportButton.tsx:33 Input path: C:\Users\mages\Videos\Testing\MessageAI_Intro.mp4
+ExportButton.tsx:34 Selected clip available: true
+ExportButton.tsx:54 Export cancelled by user

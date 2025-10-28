@@ -1,0 +1,113 @@
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py.cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+node_modules/
+dist
+build
+out
+.DS_Store
+
+# PEP 582; used by e.g. github.com/David-OConnor/pyflow and github.com/pdm-project/pdm
+__pypackages__/
+
+# ignore test output files
+*.webm
+front-end/collab-canvas/playwright-report/**
+front-end/collab-canvas/test-results/*
+
+
+# Environments
+.env
+.env.local
+.env.*
+.envrc
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Cursor
+#  Cursor is an AI-powered code editor. `.cursorignore` specifies files/directories to
+#  exclude from AI features like autocomplete and code analysis. Recommended for sensitive data
+#  refer to https://docs.cursor.com/context/ignore-files
+.cursorignore
+.cursorindexingignore
+
+# Firebase
+firebase-adminsdk-*.json
+google-services.json
+GoogleService-Info.plist
+firebase-debug.log
+.firebase/
+
+# ignore memory bank and cursor rules
+memory-bank/**
+.cursor/**
+
+# Ignore all .md files created by cursor for various bug fixes and implementation notes
+*.md
+# But keep these specific ones
+!README.md
+!docs/PRD.md
+!docs/Architecture_Summary.md
+!docs/TaskList_MVP.md
+!docs/TaskList_PostMVP_Organized.md
+!docs/Conflict_Resolution.md
+!docs/Automated_Test_evaluation_guide.md
+!docs/overview.md
+!docs/ArchitectureDiagram.md
+!docs/BrainLift_MVP.md
+!docs/Setup_Guide.md
+!docs/SLASH_COMMANDS_GUIDE.md
+!docs/AI_AGENT_ARCHITECTURE.md
+!front-end/collab-canvas/docs/Cypress_Testing.md
+!front-end/collab-canvas/docs/Test_coverage.md
+!guides/getting-started.md
+!docs/PROMPTING_TIPS.md
+!docs/AI_AGENT_GUIDE.md
+!docs/CONFLICT_RESOLUTION.md
+!docs/QUICK_START_FOR_GRADERS.md
+!docs/GRADER_INSTRUCTIONS.md
+!docs/DEPLOYMENT_GUIDE.md 
+.vercel
+back-end/serviceAccountKey.base64.txt
+cors.json
+tatus --short
+back-end/env.ai.template
+docs/MessageAI.pdf
+# .github/workflows/keep-alive.yml
+memory-bank/README.md
+setup-eas-secrets.ps1
+setup-vercel-env.ps1
+how 9f2343b --name-status
+.husky/pre-commit
+back-end/python-api/.rebuild-marker
+back-end/python-api/deploy-fresh.ps1
+back-end/python-api/deploy.ps1
+back-end/python-api/deploy.sh
+back-end/python-api/dev-phone.ps1
+back-end/python-api/scripts/create_global_vector_index.ps1
+back-end/python-api/scripts/create_global_vector_index.sh
+back-end/python-api/scripts/create_vector_index.ps1
+back-end/python-api/scripts/create_vector_index.sh
+front-end/messageai/setup-phone.ps1
+front-end/messageai/scripts/fix-lint-issues.sh
+.github/workflows/keep-alive-reliable.yml
+.github/workflows/keep-alive.yml
+clipforge/.editorconfig
+clipforge/.prettierignore
+clipforge/.prettierrc.yaml

@@ -1,0 +1,54 @@
+# Vercel ignore file - exclude from deployment
+
+# Tests
+__tests__/
+*.test.ts
+*.test.tsx
+jest.config.js
+jest.setup.js
+
+# Node modules (installed on Vercel)
+node_modules/
+
+# Environment files (set in Vercel dashboard)
+.env
+.env.local
+.env.*.local
+
+# Build artifacts (created during build)
+.expo/
+dist/
+
+# IDE
+.vscode/
+.idea/
+
+# Git
+.git/
+.gitignore
+
+# Native files (not needed for web)
+ios/
+android/
+google-services.json
+GoogleService-Info.plist
+
+# EAS
+eas.json
+
+# Linting
+.eslintrc.js
+eslint.config.js
+
+# Scripts
+scripts/
+
+# Documentation
+README.md
+*.md
+
+# Firebase local files
+firestore.rules
+storage.rules
+firestore.indexes.json
+firebase-debug.log
